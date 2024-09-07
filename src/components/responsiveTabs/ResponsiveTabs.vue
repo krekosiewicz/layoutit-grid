@@ -1,11 +1,9 @@
 <template>
   <div class="area-editor-responsive-config">
     <div class="area-editor-responsive-options">
-      <!-- Default tab (always present and non-removable) -->
       <div class="tab-item" :class="{ active: activeTab === 'default' }" @click="setActiveTab('default')">
         Default ({{ mode }})
       </div>
-      <!-- Dynamic tabs -->
       <div
         v-for="(tab, index) in tabs"
         :key="index"
@@ -16,7 +14,6 @@
         @click="setActiveTab(index)"
       >
         {{ tab.name }}
-        <!-- Remove Button: Only show on hover -->
         <button
           v-if="hoveredTab === index"
           aria-label="Remove selection"
@@ -39,36 +36,29 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-// State to track the mode (Mobile First / Desktop First)
 const mode = ref('Mobile First')
 
-// Create a reactive array to store additional tabs (excluding default)
 const tabs = ref([])
 const hoveredTab = ref<number | null>(null) // Track which tab is hovered
 const activeTab = ref<string | number>('default') // Track the active tab
 
-// Function to set the active tab
 const setActiveTab = (tab: string | number) => {
   activeTab.value = tab
 }
 
-// Function to add a new tab (active tab stays the same unless user clicks new tab)
 const addTab = () => {
   const newIndex = tabs.value.length + 1
   tabs.value.push({ name: `Tab ${newIndex}` })
 }
 
-// Function to remove a tab (cannot remove the default tab)
 const removeTab = (index: number) => {
   tabs.value.splice(index, 1)
 
-  // If the active tab is the one being removed, set the default tab as active
   if (activeTab.value === index) {
     setActiveTab('default')
   }
 }
 
-// Function to toggle the mode between Mobile First and Desktop First
 const toggleMode = () => {
   mode.value = mode.value === 'Mobile First' ? 'Desktop First' : 'Mobile First'
 }
@@ -99,7 +89,6 @@ const toggleMode = () => {
   cursor: pointer;
 }
 
-/* Active tab style */
 .tab-item.active {
   background: blue;
   color: white;
