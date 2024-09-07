@@ -2,6 +2,7 @@
   <PropsHeader @toggle-props="toggleView('props')" @toggle-code="toggleView('code')" />
   <PropsSidebar :area="mainArea" />
   <div class="area-editor-container">
+    <ResponsiveTabs />
     <AreaEditor :area="mainArea" />
   </div>
   <SidebarRight>
@@ -13,7 +14,7 @@
 
 <script setup lang="ts">
 import { loadFromStorage, useAppState } from '../store.js'
-import { keyMonitor } from '../utils/keyMonitor'
+import { keyMonitor } from '../utils/keyMonitor.js'
 
 let { mainArea, currentView } = $(useAppState())
 
@@ -217,10 +218,10 @@ p {
 
 .area-editor-container {
   flex: 1;
-  display: grid;
-  overflow: auto;
-  align-items: center;
-  justify-items: center;
+  //display: grid;
+  //overflow: auto;
+  //align-items: center;
+  //justify-items: center;
   @media screen and (max-width: 768px) {
     padding-top: 48px;
   }
