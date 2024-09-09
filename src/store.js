@@ -270,6 +270,57 @@ export function subGrid(area) {
   setCurrentArea(area)
 }
 
+// Extend the existing state for multiple tabs
+export const tabs = ref([]) // Stores the list of tabs
+export const activeTabIndex = ref(0) // Track the currently active tab
+
+// Each tab will have its own state in local storage
+export const tabStates = useLocalStorage('layoutit-grid-tab-states', {})
+
+// Function to create a new pristine tab with default state
+export function createNewTab() {
+  const newTabId = `tab-${tabs.value.length + 1}` // Generate a unique tab ID
+  tabs.value.push({
+    id: newTabId,
+    name: `Tab ${tabs.value.length + 1}`,
+    layout: createMainAreaState(), // Create a new pristine layout state
+  })
+
+  // Store this pristine state in local storage for the new tab
+  tabStates.value[newTabId] = createMainAreaState()
+  setActiveTab(tabs.value.length - 1) // Set the newly created tab as the active tab
+}
+
+// Function to set a tab as active
+export function setActiveTab(index) {
+  activeTabIndex.value = index
+  const activeTab = tabs.value[index]
+
+  // Load the state from local storage for the active tab
+  if (tabStates.value[activeTab.id]) {
+    mainArea.value = tabStates.value[activeTab.id]
+  } else {
+    mainArea.value = createMainAreaState() // Default to a pristine state if not found
+  }
+}
+
+// Function to save the current tab state to local storage
+export function saveActiveTabState() {
+  const activeTab = tabs.value[activeTabIndex.value]
+  tabStates.value[activeTab.id] = mainArea.value
+}
+
+// Function to modify and save changes in the current tab's state
+export function modifyTabState(modificationFn) {
+  modificationFn(mainArea.value) // Modify the main area state
+  saveActiveTabState() // Save the modified state to local storage
+}
+
+// Initialize the store with one default tab
+if (tabs.value.length === 0) {
+  createNewTab()
+}
+
 const appState = {
   mainArea,
   currentArea,
